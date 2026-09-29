@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F5F3FF">
+<title>Download Voocabo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --paper: #F5F3FF;
+        --surface: #ffffff;
+        --surface-2: rgba(30, 27, 75, 0.04);
+        --ink: #1E1B4B;
+        --muted: #6B6890;
+        --violet: #5B4BFF;
+        --violet-dark: #4536E0;
+        --violet-soft: rgba(91,75,255,0.10);
+        --mark: #FFD84D;
+        --line: rgba(30, 27, 75, 0.10);
+        --shadow-color: rgba(30,27,75,0.30);
+        --icon-fg: #1E1B4B;
+        --word-fg: #1E1B4B;
+        color-scheme: light;
+    }
+
+    :root[data-theme="dark"] {
+        --paper: #100E23;
+        --surface: #1B1740;
+        --surface-2: rgba(255,255,255,0.05);
+        --ink: #F1EFFF;
+        --muted: #A6A2D6;
+        --violet: #8677FF;
+        --violet-dark: #A79BFF;
+        --violet-soft: rgba(134,119,255,0.16);
+        --mark: #6C5CE7;
+        --line: rgba(255,255,255,0.10);
+        --shadow-color: rgba(0,0,0,0.55);
+        --icon-fg: #100E23;
+        --word-fg: #ffffff;
+        color-scheme: dark;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+            --paper: #100E23;
+            --surface: #1B1740;
+            --surface-2: rgba(255,255,255,0.05);
+            --ink: #F1EFFF;
+            --muted: #A6A2D6;
+            --violet: #8677FF;
+            --violet-dark: #A79BFF;
+            --violet-soft: rgba(134,119,255,0.16);
+            --mark: #6C5CE7;
+            --line: rgba(255,255,255,0.10);
+            --shadow-color: rgba(0,0,0,0.55);
+            --icon-fg: #100E23;
+            --word-fg: #ffffff;
+            color-scheme: dark;
+        }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+        -webkit-text-size-adjust: 100%;
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    body {
+        font-family: "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        min-height: 100%;
+        background:
+            radial-gradient(60% 40% at 90% 0%, var(--violet-soft), transparent 70%),
+            radial-gradient(50% 35% at 0% 100%, rgba(255,216,77,0.22), transparent 70%),
+            var(--paper);
+        color: var(--ink);
+        display: flex;
+        justify-content: center;
+        padding: max(24px, env(safe-area-inset-top, 0px)) 18px max(24px, env(safe-area-inset-bottom, 0px));
+        transition: background-color .3s ease, color .3s ease;
+    }
+
+    .bn { font-family: "Hind Siliguri", "Bricolage Grotesque", sans-serif; }
+
+    .container { width: 100%; max-width: 440px; }
+
+    /* ---------- top bar ---------- */
+    .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 22px;
+    }
+
+    .brand-row { display: flex; align-items: center; gap: 12px; }
+
+    .logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: linear-gradient(155deg, var(--violet), var(--violet-dark));
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-size: 24px;
+        font-weight: 800;
+        box-shadow: 0 8px 20px rgba(91,75,255,0.35);
+        flex-shrink: 0;
+    }
+
+    :root[data-theme="dark"] .logo { color: #100E23; }
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .logo { color: #100E23; }
+    }
+
+    .brand { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
+
+    .topbar-right { display: flex; align-items: center; gap: 8px; }
+
+    .version {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        color: var(--violet-dark);
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .theme-toggle {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        color: var(--ink);
+        flex-shrink: 0;
+    }
+
+    .theme-toggle svg { width: 18px; height: 18px; }
+    .theme-toggle .moon { display: none; }
+    :root[data-theme="dark"] .theme-toggle .sun { display: none; }
+    :root[data-theme="dark"] .theme-toggle .moon { display: block; }
+
+    /* ---------- word card (hero) ---------- */
+    .word-card {
+        position: relative;
+        background: var(--surface);
+        border-radius: 26px;
+        padding: 26px 24px 24px;
+        border: 1px solid var(--line);
+        box-shadow: 0 24px 50px -20px var(--shadow-color);
+        transform: rotate(-1.2deg);
+        min-height: 236px;
+        transition: background-color .3s ease, border-color .3s ease;
+    }
+
+    .word-inner { transition: opacity .35s ease, transform .35s ease; }
+    .word-inner.swap { opacity: 0; transform: translateY(8px); }
+
+    .word {
+        display: inline;
+        font-size: 42px;
+        line-height: 1.25;
+        font-weight: 800;
+        letter-spacing: -1px;
+        background: linear-gradient(transparent 58%, var(--mark) 58%, var(--mark) 92%, transparent 92%);
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+        padding: 0 4px;
+        margin-left: -4px;
+        color: var(--word-fg);
+    }
+
+    .phonetic { margin-top: 10px; color: var(--muted); font-size: 15px; }
+    .pos { font-style: italic; }
+
+    .meaning-bn {
+        margin-top: 16px;
+        font-size: 19px;
+        font-weight: 600;
+        line-height: 1.5;
+        color: var(--violet-dark);
+    }
+
+    .meaning-en { margin-top: 4px; font-size: 15px; color: var(--muted); }
+
+    .example {
+        margin-top: 12px;
+        padding-left: 12px;
+        border-left: 3px solid var(--violet);
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.5;
+    }
+
+    .dots { display: flex; gap: 6px; margin-top: 18px; }
+    .dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--line); transition: all .3s; }
+    .dots span.on { width: 20px; border-radius: 4px; background: var(--violet); }
+
+    /* ---------- intro ---------- */
+    .subtitle {
+        margin: 28px 4px 0;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.55;
+    }
+
+    .subtitle-bn { margin: 4px 4px 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+    /* ---------- stats ---------- */
+    .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
+
+    .info {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 14px 16px;
+    }
+
+    .info-label { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+    .info-value { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
+
+    /* ---------- download button ---------- */
+    .download-btn {
+        width: 100%;
+        margin-top: 16px;
+        border: 0;
+        border-radius: 18px;
+        padding: 18px 20px;
+        background: linear-gradient(155deg, var(--violet), var(--violet-dark));
+        color: #fff;
+        font: inherit;
+        font-size: 17px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 14px 28px -10px rgba(91,75,255,0.65);
+        transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+
+    :root[data-theme="dark"] .download-btn { color: #100E23; }
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .download-btn { color: #100E23; }
+    }
+
+    .download-btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.05); }
+    .download-btn:active:not(:disabled) { transform: scale(0.98); }
+    .download-btn:disabled { opacity: .55; cursor: not-allowed; box-shadow: none; }
+    .download-btn:focus-visible, .browser-btn:focus-visible, .theme-toggle:focus-visible, .contact-link:focus-visible { outline: 3px solid var(--mark); outline-offset: 3px; }
+
+    .status { min-height: 20px; margin-top: 12px; text-align: center; color: var(--muted); font-size: 13px; }
+
+    /* ---------- in-app browser notice ---------- */
+    .browser-box {
+        display: none;
+        margin-top: 14px;
+        padding: 16px;
+        border-radius: 16px;
+        background: #FFF6CC;
+        border: 1px solid rgba(214,160,0,0.35);
+    }
+
+    .browser-box.show { display: block; }
+    .browser-title { font-size: 15px; font-weight: 800; margin-bottom: 6px; color: #1E1B4B; }
+    .browser-text { font-size: 13px; line-height: 1.55; color: #5c5330; }
+
+    .browser-btn {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 10px 16px;
+        border-radius: 12px;
+        background: #1E1B4B;
+        color: #fff;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    /* ---------- about / contact section ---------- */
+    .section-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 34px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .section-divider::before, .section-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+    }
+
+    .about-card {
+        margin-top: 16px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 20px;
+    }
+
+    .about-title { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+
+    .about-text { font-size: 14px; line-height: 1.6; color: var(--muted); }
+    .about-text.bn { margin-top: 8px; }
+
+    .contact-list {
+        margin-top: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .contact-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 10px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: var(--ink);
+        transition: background-color .15s ease;
+    }
+
+    .contact-link:hover { background: var(--surface-2); }
+
+    .contact-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        background: var(--violet-soft);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        color: var(--violet-dark);
+    }
+
+    .contact-icon svg { width: 18px; height: 18px; }
+
+    .contact-text { display: flex; flex-direction: column; min-width: 0; }
+    .contact-label { font-size: 12px; color: var(--muted); }
+    .contact-value { font-size: 15px; font-weight: 700; overflow-wrap: anywhere; }
+
+    /* ---------- footer ---------- */
+    .requirements {
+        margin-top: 26px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.6;
+        text-align: center;
+    }
+
+    .footer { margin-top: 10px; margin-bottom: 4px; text-align: center; color: var(--muted); font-size: 12px; }
+    .footer a { color: var(--violet-dark); text-decoration: none; font-weight: 600; }
+
+    @media (prefers-reduced-motion: reduce) {
+        * { transition: none !important; }
+    }
+
+    @media (max-width: 360px) {
+        .word { font-size: 34px; }
+        .word-card { padding: 22px 18px; }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="topbar">
+        <div class="brand-row">
+            <div class="logo">V</div>
+            <div class="brand">Voocabo</div>
+        </div>
+        <div class="topbar-right">
+            <div class="version" id="version">Loading...</div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" type="button">
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="word-card" aria-live="polite">
+        <div class="word-inner" id="wordInner">
+            <span class="word" id="wWord">Ubiquitous</span>
+            <div class="meaning-bn bn" id="wMeanBn">সর্বব্যাপী</div>
+            <div class="example" id="wEx">Smartphones have become ubiquitous in modern life.</div>
+        </div>
+        <div class="dots" id="dots"><span class="on"></span><span></span><span></span><span></span><span></span></div>
+    </div>
+
+    <div class="subtitle">
+        Learn English vocabulary with meanings, examples, packs and daily words.
+    </div>
+    <div class="subtitle-bn bn">
+        অর্থ, উদাহরণ ও প্রতিদিনের নতুন শব্দসহ ইংরেজি শব্দভাণ্ডার শিখুন — বাংলায়।
+    </div>
+
+    <div class="info-grid">
+        <div class="info">
+            <div class="info-label">Downloads</div>
+            <div class="info-value" id="downloads">Loading...</div>
+        </div>
+        <div class="info">
+            <div class="info-label">File size</div>
+            <div class="info-value" id="fileSize">Loading...</div>
+        </div>
+    </div>
+
+    <button class="download-btn" id="downloadButton" disabled>Loading APK...</button>
+
+    <div class="browser-box" id="browserBox">
+        <div class="browser-title">Open this page in your browser</div>
+        <div class="browser-text">
+            You're currently using an in-app browser such as Facebook or Messenger.
+            APK downloads may stop or fail inside this browser. For a more reliable
+            download, open this page in Chrome or another external browser.
+        </div>
+        <a href="#" class="browser-btn" id="openBrowserButton">Open in Browser</a>
+    </div>
+
+    <div class="status" id="status">Connecting to GitHub...</div>
+
+    <div class="requirements">
+        Android APK • GitHub Release<br>
+        Please allow installation from your browser if Android asks for permission.
+    </div>
+
+    <!-- ---------- About ---------- -->
+    <div class="section-divider">About</div>
+
+    <div class="about-card">
+        <div class="about-title">About Voocabo</div>
+        <div class="about-text">
+            Voocabo helps Bengali-speaking learners build real English vocabulary —
+            word meanings, pronunciation, example sentences and themed word packs,
+            plus a new word every day.
+        </div>
+        <div class="about-text bn">
+            ভোকাবো বাংলাভাষী শিক্ষার্থীদের জন্য তৈরি একটি ইংরেজি শব্দভাণ্ডার শেখার অ্যাপ —
+            অর্থ, উচ্চারণ, উদাহরণ বাক্য, থিমভিত্তিক শব্দ প্যাক এবং প্রতিদিনের নতুন শব্দ নিয়ে।
+        </div>
+    </div>
+
+    <!-- ---------- Contact ---------- -->
+    <div class="section-divider">Contact &amp; Support</div>
+
+    <div class="about-card">
+        <div class="contact-list">
+
+            <a class="contact-link" href="mailto:voocabo@gmail.com">
+                <span class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M22 6l-10 7L2 6"></path></svg>
+                </span>
+                <span class="contact-text">
+                    <span class="contact-label">Email</span>
+                    <span class="contact-value">voocabo@gmail.com</span>
+                </span>
+            </a>
+
+            <a class="contact-link" href="https://wa.me/8801788926582" target="_blank" rel="noopener">
+                <span class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 20l1.1-5.4A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+                </span>
+                <span class="contact-text">
+                    <span class="contact-label">WhatsApp</span>
+                    <span class="contact-value">01788-926582</span>
+                </span>
+            </a>
+
+            <a class="contact-link" href="https://facebook.com/voocabo" target="_blank" rel="noopener">
+                <span class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                </span>
+                <span class="contact-text">
+                    <span class="contact-label">Facebook</span>
+                    <span class="contact-value">facebook.com/voocabo</span>
+                </span>
+            </a>
+
+        </div>
+    </div>
+
+    <div class="footer">
+        Powered by
+        <a href="https://github.com/alaminazibor/Voocabo" target="_blank" rel="noopener">GitHub</a>
+        • Voocabo by Ayqora
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   THEME (day / night)
+   ========================================================= */
+
+(function initTheme() {
+    const root = document.documentElement;
+    const toggle = document.getElementById("themeToggle");
+    const STORAGE_KEY = "voocabo-theme";
+
+    let saved = null;
+    try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+
+    if (saved === "light" || saved === "dark") {
+        root.setAttribute("data-theme", saved);
+    }
+
+    function currentIsDark() {
+        const attr = root.getAttribute("data-theme");
+        if (attr === "dark") return true;
+        if (attr === "light") return false;
+        return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+
+    toggle.addEventListener("click", function () {
+        const nextDark = !currentIsDark();
+        root.setAttribute("data-theme", nextDark ? "dark" : "light");
+        try { localStorage.setItem(STORAGE_KEY, nextDark ? "dark" : "light"); } catch (e) {}
+    });
+})();
+
+
+/* =========================================================
+   VOOCABO GITHUB CONFIGURATION
+   ========================================================= */
+
+const GITHUB_OWNER = "alaminazibor";
+const GITHUB_REPO = "Voocabo";
+
+/* Fallback APK URL, used if the GitHub API fails */
+const FALLBACK_APK_URL =
+    "https://github.com/alaminazibor/Voocabo/releases/download/V.1.0.0/voocabo-app-release_1.0.0.apk";
+
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
+const versionElement = document.getElementById("version");
+const downloadsElement = document.getElementById("downloads");
+const fileSizeElement = document.getElementById("fileSize");
+const downloadButton = document.getElementById("downloadButton");
+const statusElement = document.getElementById("status");
+const browserBox = document.getElementById("browserBox");
+const openBrowserButton = document.getElementById("openBrowserButton");
+
+let APK_URL = FALLBACK_APK_URL;
+
+
+/* =========================================================
+   WORD CARD ROTATION (decorative preview, EN + BN)
+   ========================================================= */
+
+const WORDS = [
+    { w: "Ubiquitous", mBn: "সর্বব্যাপী",
+      e: "Smartphones have become ubiquitous in modern life." },
+    { w: "Ephemeral", mBn: "ক্ষণস্থায়ী",
+      e: "Fame in social media is often ephemeral." },
+    { w: "Resilient", mBn: "স্থিতিস্থাপক / সহনশীল",
+      e: "She remained resilient despite many failures." },
+    { w: "Meticulous", mBn: "খুঁতখুঁতে / নিখুঁত",
+      e: "He is meticulous about every small detail." },
+    { w: "Candid", mBn: "খোলাখুলি / অকপট",
+      e: "Give me your candid opinion about my work." }
+];
+
+(function startWordCards() {
+    const inner = document.getElementById("wordInner");
+    const dots = document.querySelectorAll("#dots span");
+    let i = 0;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    setInterval(function () {
+        inner.classList.add("swap");
+        setTimeout(function () {
+            i = (i + 1) % WORDS.length;
+            const d = WORDS[i];
+            document.getElementById("wWord").textContent = d.w;
+            document.getElementById("wMeanBn").textContent = d.mBn;
+            document.getElementById("wEx").textContent = d.e;
+            dots.forEach((el, n) => el.classList.toggle("on", n === i));
+            inner.classList.remove("swap");
+        }, 350);
+    }, 3800);
+})();
+
+
+/* =========================================================
+   FORMAT FILE SIZE
+   ========================================================= */
+
+function formatFileSize(bytes) {
+
+    if (!bytes || bytes <= 0) {
+        return "Unknown";
+    }
+
+    const units = ["B", "KB", "MB", "GB"];
+    let index = 0;
+    let size = bytes;
+
+    while (size >= 1024 && index < units.length - 1) {
+        size = size / 1024;
+        index++;
+    }
+
+    return size.toFixed(1) + " " + units[index];
+}
+
+
+/* =========================================================
+   DETECT IN-APP BROWSER
+   ========================================================= */
+
+function detectInAppBrowser() {
+
+    const userAgent =
+        navigator.userAgent ||
+        navigator.vendor ||
+        window.opera ||
+        "";
+
+    const ua = userAgent.toLowerCase();
+
+    const facebook =
+        ua.includes("fban") ||
+        ua.includes("fbav") ||
+        ua.includes("fb_iab") ||
+        ua.includes("fb4a") ||
+        ua.includes("fbios");
+
+    const messenger = ua.includes("messenger");
+    const instagram = ua.includes("instagram");
+
+    const tiktok =
+        ua.includes("bytedancewebview") ||
+        ua.includes("tiktok");
+
+    const otherInApp =
+        ua.includes("line/") ||
+        ua.includes("linkedinapp") ||
+        ua.includes("twitter");
+
+    return (
+        facebook ||
+        messenger ||
+        instagram ||
+        tiktok ||
+        otherInApp
+    );
+}
+
+
+/* =========================================================
+   SHOW BROWSER WARNING
+   ========================================================= */
+
+function showBrowserWarning() {
+
+    browserBox.classList.add("show");
+
+    /*
+       JavaScript cannot force Chrome to open on every Android
+       device because Android controls external-app launching.
+    */
+
+    openBrowserButton.onclick = function (event) {
+
+        event.preventDefault();
+
+        const currentUrl = window.location.href;
+
+        const intentUrl =
+            "intent://" +
+            currentUrl.replace(/^https?:\/\//, "") +
+            "#Intent;scheme=https;package=com.android.chrome;end";
+
+        window.location.href = intentUrl;
+
+        return false;
+    };
+}
+
+
+/* =========================================================
+   LOAD GITHUB RELEASE
+   ========================================================= */
+
+async function loadRelease() {
+
+    try {
+
+        statusElement.textContent = "Checking latest release...";
+
+        const apiUrl =
+            `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
+
+        const response = await fetch(apiUrl, {
+            headers: { "Accept": "application/vnd.github+json" }
+        });
+
+        if (!response.ok) {
+            throw new Error("GitHub API error: " + response.status);
+        }
+
+        const release = await response.json();
+
+        const apk = release.assets.find(
+            asset => asset.name.toLowerCase().endsWith(".apk")
+        );
+
+        if (!apk) {
+            throw new Error("No APK found in latest release.");
+        }
+
+        APK_URL = apk.browser_download_url;
+
+        versionElement.textContent = release.tag_name;
+
+        downloadsElement.textContent =
+            Number(apk.download_count).toLocaleString();
+
+        fileSizeElement.textContent = formatFileSize(apk.size);
+
+        downloadButton.disabled = false;
+        downloadButton.textContent = "Download APK";
+
+        statusElement.textContent = "Latest version available";
+
+        if (detectInAppBrowser()) {
+            showBrowserWarning();
+            statusElement.textContent =
+                "For a reliable APK download, use Chrome.";
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        APK_URL = FALLBACK_APK_URL;
+
+        versionElement.textContent = "V.1.0.0";
+        downloadsElement.textContent = "—";
+        fileSizeElement.textContent = "—";
+
+        downloadButton.disabled = false;
+        downloadButton.textContent = "Download APK";
+
+        statusElement.textContent = "Using fallback download link.";
+    }
+}
+
+
+/* =========================================================
+   DOWNLOAD BUTTON
+   ========================================================= */
+
+downloadButton.addEventListener("click", function () {
+
+    if (!APK_URL) {
+        return;
+    }
+
+    if (detectInAppBrowser()) {
+        showBrowserWarning();
+        statusElement.textContent =
+            "Please open this page in Chrome for a reliable download.";
+        return;
+    }
+
+    window.location.href = APK_URL;
+});
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+loadRelease();
+
+</script>
+
+</body>
+</html>
