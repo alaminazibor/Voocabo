@@ -426,13 +426,18 @@
     <button class="download-btn" id="downloadButton" disabled>Loading APK...</button>
 
     <div class="browser-box" id="browserBox">
-        <div class="browser-title">Open this page in your browser</div>
+        <div class="browser-title">You're 10 seconds away from Voocabo 🚀</div>
         <div class="browser-text">
-            You're currently using an in-app browser such as Facebook or Messenger.
-            APK downloads may stop or fail inside this browser. For a more reliable
-            download, open this page in Chrome or another external browser.
+            You opened this from Facebook, Messenger or a similar app — these can block
+            APK downloads. Just tap the button below to continue in your regular browser,
+            and your download will start right away.
         </div>
-        <a href="#" class="browser-btn" id="openBrowserButton">Open in Browser</a>
+        <div class="browser-text bn" style="margin-top: 8px;">
+            আপনি Facebook, Messenger বা এমন কোনো অ্যাপ থেকে এসেছেন — এখানে APK ডাউনলোড
+            আটকে যেতে পারে। নিচের বাটনে ট্যাপ করে সাধারণ ব্রাউজারে চালিয়ে যান, ডাউনলোড
+            সাথে সাথেই শুরু হয়ে যাবে।
+        </div>
+        <a href="#" class="browser-btn" id="openBrowserButton">Continue in Browser / ব্রাউজারে চালিয়ে যান</a>
     </div>
 
     <div class="status" id="status">Connecting to GitHub...</div>
@@ -710,7 +715,7 @@ async function loadRelease() {
 
     try {
 
-        statusElement.textContent = "Checking latest release...";
+        statusElement.textContent = "Getting Voocabo ready for you... / আপনার জন্য Voocabo প্রস্তুত করা হচ্ছে...";
 
         const apiUrl =
             `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
@@ -745,12 +750,12 @@ async function loadRelease() {
         downloadButton.disabled = false;
         downloadButton.textContent = "Download APK";
 
-        statusElement.textContent = "Latest version available";
+        statusElement.textContent = "Voocabo is ready — you're one tap away! / Voocabo প্রস্তুত — মাত্র একটা ট্যাপ বাকি!";
 
         if (detectInAppBrowser()) {
             showBrowserWarning();
             statusElement.textContent =
-                "For a reliable APK download, use Chrome.";
+                "Almost there! Open in your browser to continue. / প্রায় হয়ে গেছে! এগিয়ে যেতে ব্রাউজারে খুলুন।";
         } else {
             startAutoDownload();
         }
@@ -768,10 +773,14 @@ async function loadRelease() {
         downloadButton.disabled = false;
         downloadButton.textContent = "Download APK";
 
-        statusElement.textContent = "Using fallback download link.";
+        statusElement.textContent = "Voocabo is ready — you're one tap away! / Voocabo প্রস্তুত — মাত্র একটা ট্যাপ বাকি!";
 
         if (!detectInAppBrowser()) {
             startAutoDownload();
+        } else {
+            showBrowserWarning();
+            statusElement.textContent =
+                "Almost there! Open in your browser to continue. / প্রায় হয়ে গেছে! এগিয়ে যেতে ব্রাউজারে খুলুন।";
         }
     }
 }
@@ -791,14 +800,16 @@ function startAutoDownload() {
 
     autoDownloadStarted = true;
 
-    statusElement.textContent = "Starting download automatically...";
+    const startingText = "Your download is starting — thanks for choosing Voocabo! 🎉 / আপনার ডাউনলোড শুরু হচ্ছে — Voocabo বেছে নেওয়ার জন্য ধন্যবাদ! 🎉";
+
+    statusElement.textContent = startingText;
 
     window.location.href = APK_URL;
 
     setTimeout(function () {
-        if (statusElement.textContent === "Starting download automatically...") {
+        if (statusElement.textContent === startingText) {
             statusElement.textContent =
-                "If the download didn't start, tap the button below.";
+                "Didn't start? Just tap the button below. / শুরু হয়নি? নিচের বাটনে ট্যাপ করুন।";
         }
     }, 2500);
 }
@@ -817,7 +828,7 @@ downloadButton.addEventListener("click", function () {
     if (detectInAppBrowser()) {
         showBrowserWarning();
         statusElement.textContent =
-            "Please open this page in Chrome for a reliable download.";
+            "Almost there! Open in your browser to continue. / প্রায় হয়ে গেছে! এগিয়ে যেতে ব্রাউজারে খুলুন।";
         return;
     }
 
