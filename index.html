@@ -751,6 +751,8 @@ async function loadRelease() {
             showBrowserWarning();
             statusElement.textContent =
                 "For a reliable APK download, use Chrome.";
+        } else {
+            startAutoDownload();
         }
 
     } catch (error) {
@@ -767,7 +769,38 @@ async function loadRelease() {
         downloadButton.textContent = "Download APK";
 
         statusElement.textContent = "Using fallback download link.";
+
+        if (!detectInAppBrowser()) {
+            startAutoDownload();
+        }
     }
+}
+
+
+/* =========================================================
+   AUTO-START DOWNLOAD
+   ========================================================= */
+
+let autoDownloadStarted = false;
+
+function startAutoDownload() {
+
+    if (autoDownloadStarted || !APK_URL) {
+        return;
+    }
+
+    autoDownloadStarted = true;
+
+    statusElement.textContent = "Starting download automatically...";
+
+    window.location.href = APK_URL;
+
+    setTimeout(function () {
+        if (statusElement.textContent === "Starting download automatically...") {
+            statusElement.textContent =
+                "If the download didn't start, tap the button below.";
+        }
+    }, 2500);
 }
 
 
