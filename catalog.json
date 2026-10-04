@@ -1,31 +1,5 @@
 {
   "version": 1,
-  "packs": [
-    {
-      "id": "pack_ielts",
-      "title": "IELTS Words",
-      "description": "আইইএলটিএস-এর জরুরি শব্দ",
-      "productId": "ielts",
-      "price": "১৫০ টাকা",
-      "wordCount": 500
-    },
-    {
-      "id": "pack_gre",
-      "title": "GRE Words",
-      "description": "জিআরই লেভেলের কঠিন শব্দ",
-      "productId": "gre",
-      "price": "২০০ টাকা",
-      "wordCount": 800
-    },
-    {
-      "id": "pack_toefl",
-      "title": "TOEFL Words",
-      "description": "টোফেলের একাডেমিক শব্দ",
-      "productId": "toefl",
-      "price": "১৫০ টাকা",
-      "wordCount": 600
-    }
-  ],
   "features": [
     {
       "id": "feature_lock_practice",
