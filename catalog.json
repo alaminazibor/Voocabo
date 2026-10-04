@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "packs": [
+    {
+      "id": "pack_ielts",
+      "title": "IELTS Words",
+      "description": "আইইএলটিএস-এর জরুরি শব্দ",
+      "productId": "ielts",
+      "price": "১৫০ টাকা",
+      "wordCount": 500
+    },
+    {
+      "id": "pack_gre",
+      "title": "GRE Words",
+      "description": "জিআরই লেভেলের কঠিন শব্দ",
+      "productId": "gre",
+      "price": "২০০ টাকা",
+      "wordCount": 800
+    },
+    {
+      "id": "pack_toefl",
+      "title": "TOEFL Words",
+      "description": "টোফেলের একাডেমিক শব্দ",
+      "productId": "toefl",
+      "price": "১৫০ টাকা",
+      "wordCount": 600
+    }
+  ],
+  "features": [
+    {
+      "id": "feature_lock_practice",
+      "premium": true,
+      "price": "100 টাকা"
+    },
+    {
+      "id": "feature_lock_wallpaper",
+      "premium": true,
+      "price": "100 টাকা"
+    },
+    {
+      "id": "feature_practice_widget",
+      "premium": true,
+      "price": "100 টাকা"
+    }
+  ],
+  "bundles": [
+    {
+      "id": "bundle_premium_features",
+      "title": "প্রিমিয়াম ফিচার বান্ডেল",
+      "description": "লক স্ক্রিন প্র্যাকটিস + ওয়ালপেপার + প্র্যাকটিস উইজেট একসাথে",
+      "price": "199 টাকা",
+      "originalPrice": "300 টাকা",
+      "items": [
+        "feature_lock_practice",
+        "feature_lock_wallpaper",
+        "feature_practice_widget"
+      ]
+    }
+  ]
+}
