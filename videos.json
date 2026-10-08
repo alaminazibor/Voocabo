@@ -1,0 +1,36 @@
+{
+  "videos": [
+    {
+      "id": "v1",
+      "title": "Basic Greetings",
+      "title_bn": "মৌলিক অভিবাদন",
+      "description": "Learn how to say hello, good morning, how are you in English.",
+      "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+      "youtube_id": "dQw4w9WgXcQ",
+      "duration_sec": 245,
+      "level": "A1",
+      "category": "conversation"
+    },
+    {
+      "id": "v2",
+      "title": "Present Simple Tense",
+      "title_bn": "Present Simple কাল",
+      "description": "How and when to use Present Simple.",
+      "thumbnail": "",
+      "youtube_id": "ABC123xyz",
+      "duration_sec": 480,
+      "level": "A1",
+      "category": "grammar"
+    },
+    {
+      "id": "v3",
+      "title": "Travel English - Airport",
+      "title_bn": "ভ্রমণ ইংরেজি - বিমানবন্দর",
+      "description": "Useful phrases at the airport.",
+      "youtube_id": "xyz789",
+      "duration_sec": 360,
+      "level": "A2",
+      "category": "travel"
+    }
+  ]
+}
